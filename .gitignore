@@ -53,9 +53,16 @@ venv/
 .ipynb_checkpoints/
 
 # ---------------------------------------------------------------------------
-# Dados grandes (opcional — descomente se usar Git LFS ou quiser excluir)
+# SUMO (scenarios/) — artefatos gerados, regeráveis com netgenerate/randomTrips
 # ---------------------------------------------------------------------------
-# results/raw/**/*.xml
+scenarios/trace.tcl
+scenarios/trace.xml
+scenarios/params/
+
+# ---------------------------------------------------------------------------
+# Resultados de simulação (results/) — XMLs do FlowMonitor, pesado e reproduzível
+# ---------------------------------------------------------------------------
+results/
 
 # ---------------------------------------------------------------------------
 # Sistema operacional / editores
