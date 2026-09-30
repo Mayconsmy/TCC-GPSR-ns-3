@@ -1,0 +1,205 @@
+\chapter{Fundamentação Teórica}
+\label{cap:fundamentacao}
+
+Este capítulo apresenta os fundamentos conceituais necessários à compreensão da proposta
+deste trabalho, organizados da seguinte forma: as Redes Ad Hoc e sua especialização em
+Redes Veiculares Ad Hoc (VANETs); a arquitetura e os modelos de mobilidade característicos
+desse tipo de rede; os protocolos de roteamento empregados, com ênfase no roteamento
+geográfico; e, por fim, o simulador ns-3, sua arquitetura, sua extensibilidade e o módulo
+FlowMonitor, utilizado para coleta de métricas de desempenho.
+
+\section{Redes Ad Hoc}
+\label{sec:redes-ad-hoc}
+
+Uma rede ad hoc é uma rede sem fio autônoma, formada dinamicamente por um conjunto de
+dispositivos móveis que se comunicam diretamente entre si, sem depender de uma
+infraestrutura de rede fixa ou de um ponto de acesso centralizado. Cada nó atua
+simultaneamente como terminal e como roteador, encaminhando pacotes em nome de outros nós
+quando estes não estão ao alcance direto do destinatário. Essa característica confere às
+redes ad hoc grande flexibilidade de implantação, mas também impõe desafios específicos de
+roteamento, uma vez que a topologia da rede pode se alterar constantemente à medida que os
+nós se movimentam.
+
+As Redes Móveis Ad Hoc (MANETs, do inglês \textit{Mobile Ad Hoc Networks}) constituem a
+categoria mais geral desse tipo de rede, sendo compostas por dispositivos móveis diversos
+(notebooks, sensores, smartphones) sem restrição quanto ao padrão de mobilidade.
+\citeonline{pimenta2013simulacao} avalia a simulação de diversos protocolos de roteamento
+propostos para MANETs, evidenciando que o desempenho desses protocolos está diretamente
+relacionado à intensidade e ao padrão de mobilidade dos nós da rede — aspecto que se torna
+ainda mais crítico no subtipo de rede tratado neste trabalho, as VANETs, descritas na seção
+seguinte.
+
+\section{Redes Veiculares Ad Hoc (VANETs)}
+\label{sec:vanets}
+
+As Redes Veiculares Ad Hoc (VANETs) constituem um subtipo especializado de MANET, no qual
+os nós móveis são veículos equipados com dispositivos de comunicação sem fio. Diferem das
+MANETs genéricas por apresentarem padrões de mobilidade restritos por vias, velocidades
+relativas elevadas entre os nós e uma topologia de rede altamente dinâmica, decorrente das
+frequentes rupturas de enlace causadas pelo deslocamento dos veículos.
+
+\citeonline{meneguette2013seamless} discutem os desafios de gerenciamento de mobilidade em
+redes de comunicação veicular, evidenciando que arquiteturas de rede tradicionais
+frequentemente não lidam de forma satisfatória com as transições de conectividade
+motivadas pela alta velocidade dos nós. As VANETs se inserem no contexto mais amplo dos
+Sistemas de Transporte Inteligentes (ITS, do inglês \textit{Intelligent Transportation
+Systems}), sendo aplicadas em cenários como prevenção de colisões, disseminação de alertas
+de trânsito e otimização de fluxo viário.
+
+\section{Arquitetura de uma VANET}
+\label{sec:arquitetura-vanet}
+
+A arquitetura de uma VANET é tipicamente composta por três elementos principais: a Unidade
+de Bordo (\textit{On-Board Unit}, OBU), instalada em cada veículo e responsável pela
+comunicação sem fio e pelo processamento das mensagens trocadas; a Unidade de Acostamento
+(\textit{Roadside Unit}, RSU), instalada em pontos fixos ao longo das vias e responsável por
+estender a cobertura da rede e por conectá-la à infraestrutura de backend; e, eventualmente,
+uma Autoridade Confiável, responsável por aspectos de segurança e gerenciamento de
+identidade dos veículos.
+
+Essa arquitetura sustenta dois domínios de comunicação complementares, já mencionados na
+Seção~\ref{sec:vanets}: a comunicação veículo-veículo (V2V), estabelecida diretamente entre
+OBUs sem depender de infraestrutura fixa; e a comunicação veículo-infraestrutura (V2I),
+estabelecida entre OBUs e RSUs. A arquitetura de mobilidade de fluxo discutida por
+\citeonline{meneguette2013seamless} ilustra como a transição entre esses dois domínios de
+comunicação — por exemplo, quando um veículo se afasta de uma RSU e passa a depender
+exclusivamente de enlaces V2V — constitui um dos principais desafios de projeto em VANETs,
+com impacto direto sobre a escolha do protocolo de roteamento empregado.
+
+\section{Mobilidade em VANETs}
+\label{sec:mobilidade}
+
+A mobilidade dos nós é o fator que mais distingue as VANETs de outras redes ad hoc, e sua
+correta modelagem é essencial para a validade de qualquer avaliação experimental. Duas
+abordagens principais são identificadas na literatura para a simulação de mobilidade
+veicular no ns-3.
+
+A primeira consiste no uso de modelos de mobilidade nativos do próprio simulador.
+\citeonline{arbabi2010highway} apresentam um modelo de mobilidade voltado especificamente à
+simulação de rodovias, integrando mobilidade e comunicação de rede por meio do mecanismo de
+eventos discretos do ns-3, sem depender de ferramentas externas.
+
+A segunda abordagem, mais frequente na literatura recente, integra o ns-3 a um simulador de
+mobilidade dedicado, como o SUMO (\textit{Simulation of Urban Mobility}), por meio do
+protocolo TraCI. Essa integração é adotada por \citeonline{kolici2015performance},
+\citeonline{su2014improved} e \citeonline{muktar2025machine}, permitindo reproduzir cenários
+de tráfego urbano mais realistas, com veículos respondendo a semáforos, congestionamentos e
+regras de trânsito, à custa de maior complexidade de configuração experimental.
+\citeonline{sharma2026modeling} revisam quatorze modelos de mobilidade distintos aplicados à
+avaliação de protocolos de roteamento em VANETs, reforçando que a escolha do modelo de
+mobilidade influencia diretamente os resultados de desempenho obtidos. Neste trabalho, opta-se
+pelo uso de modelos de mobilidade nativos do ns-3, pelas razões metodológicas apresentadas no
+Capítulo~\ref{cap:metodologia}.
+
+\section{Protocolos de Roteamento em VANETs}
+\label{sec:protocolos-roteamento}
+
+Os protocolos de roteamento em redes ad hoc — e, por extensão, em VANETs — podem ser
+classificados em duas categorias principais: protocolos topológicos, que mantêm tabelas de
+rotas construídas a partir da topologia da rede; e protocolos geográficos, que utilizam a
+posição física dos nós como critério para o encaminhamento de pacotes, tema tratado em
+detalhe na Seção~\ref{sec:roteamento-geografico}.
+
+Entre os protocolos topológicos, destacam-se o AODV (\textit{Ad hoc On-Demand Distance
+Vector}) e o OLSR (\textit{Optimized Link State Routing}), ambos nativamente suportados pelo
+ns-3 e amplamente utilizados como referência de comparação em estudos de desempenho de redes
+ad hoc. \citeonline{pimenta2013simulacao} demonstra que, embora sejam soluções consolidadas,
+esses protocolos tendem a apresentar desempenho degradado em cenários de alta mobilidade, uma
+vez que a reconstrução das tabelas de rotas após rupturas de enlace consome tempo e largura
+de banda adicionais — limitação especialmente relevante no contexto das VANETs, dada a
+mobilidade intensa discutida na Seção~\ref{sec:mobilidade}.
+
+\section{Roteamento Geográfico}
+\label{sec:roteamento-geografico}
+
+Como alternativa aos protocolos topológicos, os protocolos de roteamento geográfico
+prescindem da manutenção de tabelas de rotas completas, utilizando apenas a posição física
+dos nós — tipicamente obtida via GPS — para decidir o encaminhamento de cada pacote. Essa
+característica os torna particularmente adequados a cenários de alta mobilidade, nos quais a
+manutenção de informação topológica atualizada tem custo elevado.
+
+Dentre os protocolos geográficos, o GPSR (\textit{Greedy Perimeter Stateless Routing}) é um
+dos mais estudados na literatura, operando em dois modos complementares: o modo guloso
+(\textit{greedy forwarding}), em que o pacote é encaminhado ao vizinho geograficamente mais
+próximo do destino; e o modo de recuperação por perímetro (\textit{perimeter/face routing}),
+acionado quando o modo guloso encontra um mínimo local, isto é, quando não há vizinho mais
+próximo do destino do que o próprio nó atual. \citeonline{katsaros_positionbased_ns3}
+documentaram o desenvolvimento de um módulo de roteamento baseado em posição para o ns-3,
+estabelecendo a arquitetura de referência do GPSR no simulador — implementação que constitui
+o objeto central da modernização proposta neste trabalho.
+
+O interesse contínuo da comunidade científica em aprimorar o GPSR resultou em diversas
+variantes do protocolo original, entre as quais se destacam: o AGPSR
+(\textit{Adaptive GPSR}), proposto por \citeonline{silva2018adaptive}, que introduz seleção
+adaptativa de próximo salto para reduzir a taxa de pacotes perdidos em cenários de alta
+densidade veicular; o PA-GPSR (\textit{Path-Aware GPSR}), de \citeonline{zhang2023weight}, que
+pondera a escolha de rotas com base em métricas adicionais de qualidade de enlace; o WA-GPSR
+(\textit{Weight-Aware GPSR}), de \citeonline{smiri2021wagpsr}, que introduz um esquema de
+pesos para equilibrar múltiplos critérios de encaminhamento; e o VANET-GPSR+, proposto por
+\citeonline{zhang2026vanet}, uma variante recente que incorpora ciência de direção
+(\textit{direction-aware}) ao processo de decisão. Essas variantes evidenciam que o GPSR
+permanece uma linha de pesquisa ativa, reforçando a relevância de disponibilizar à comunidade
+uma implementação de referência atualizada e funcional do algoritmo original no ns-3.
+
+\section{O Simulador ns-3}
+\label{sec:ns3}
+
+O ns-3 (\textit{Network Simulator 3}) é uma ferramenta de simulação de eventos discretos
+voltada à pesquisa e ao ensino em redes de computadores, amplamente utilizada tanto na
+indústria quanto na academia por ser um software livre e de código aberto.
+
+\subsection{Arquitetura do ns-3}
+\label{sec:arquitetura-ns3}
+
+O simulador é estruturado em módulos escritos em C++, cada um correspondente a uma
+funcionalidade de rede específica — por exemplo, uma pilha de protocolos, um tipo de
+dispositivo de rede ou um modelo de mobilidade. Esses módulos podem ser habilitados,
+desabilitados ou combinados conforme as necessidades do cenário experimental, que é descrito
+por meio de scripts em C++ ou em Python que instanciam nós, atribuem-lhes módulos de rede e
+mobilidade, e configuram os eventos da simulação.
+
+\subsection{Extensibilidade do ns-3}
+\label{sec:extensibilidade-ns3}
+
+Além do uso dos módulos nativos, o ns-3 permite que novos módulos sejam desenvolvidos e
+integrados ao simulador, estendendo suas funcionalidades. O estudo sistemático da literatura
+conduzido por \citeonline{campanile2020computer} mapeou o uso do ns-3 em 128 publicações
+científicas, constatando que essa extensibilidade é praticada por apenas uma minoria dos
+trabalhos analisados — a maior parte se limita ao uso dos módulos já disponíveis nativamente.
+Iniciativas voltadas ao ensino, como o portal de aplicação proposto por
+\citeonline{maciel2014proposta}, e estudos comparativos entre simuladores, como o de
+\citeonline{silva2017avaliacao}, reforçam esse cenário no contexto brasileiro. De forma
+semelhante, \citeonline{conterato2014avaliacao} relatam limitações na avaliação do suporte do
+ns-3 a redes definidas por software baseadas em OpenFlow, e \citeonline{fernandes2012scalable}
+discutem restrições de escalabilidade do simulador especificamente em cenários de VANETs de
+grande porte — evidências de que funcionalidades não incorporadas ao núcleo oficial do
+simulador tendem a ficar defasadas ou dependentes de manutenção não sistemática pela
+comunidade.
+
+\subsection{APIs Relacionadas ao Roteamento}
+\label{sec:apis-roteamento}
+
+A criação de um novo protocolo de roteamento no ns-3 exige a implementação da interface
+\texttt{Ipv4RoutingProtocol}, que define os métodos responsáveis pelo encaminhamento
+(\texttt{RouteOutput}) e pelo recebimento (\texttt{RouteInput}) de pacotes IP, além de
+métodos de notificação de mudanças na interface de rede. Essa API, assim como o sistema de
+\textit{build} do simulador — que migrou do \textit{waf}, utilizado em versões mais antigas,
+para o CMake, adotado nas versões atuais —, sofreu alterações ao longo das diferentes versões
+do ns-3. A implementação do GPSR documentada por
+\citeonline{katsaros_positionbased_ns3} foi concebida sob a API e o sistema de \textit{build}
+de uma versão antiga do simulador, sendo, por esse motivo, incompatível com as versões atuais
+— incompatibilidade que motiva o processo de modernização detalhado no
+Capítulo~\ref{cap:implementacao}.
+
+\section{FlowMonitor}
+\label{sec:flowmonitor}
+
+Para a coleta de métricas de desempenho de rede no ns-3, utiliza-se o módulo FlowMonitor,
+desenvolvido por \citeonline{carneiro2009flowmonitor}, que permite a detecção automática de
+fluxos de tráfego e o registro persistente de métricas como taxa de transferência
+(\textit{throughput}), atraso médio (\textit{delay}), variação do atraso (\textit{jitter}) e
+taxa de perda de pacotes. O módulo opera de forma não intrusiva, monitorando os pacotes que
+atravessam os nós da simulação sem exigir modificações nos protocolos avaliados, o que o
+torna adequado à comparação entre diferentes algoritmos de roteamento sob as mesmas condições
+experimentais — característica explorada na avaliação comparativa descrita no
+Capítulo~\ref{cap:metodologia}.

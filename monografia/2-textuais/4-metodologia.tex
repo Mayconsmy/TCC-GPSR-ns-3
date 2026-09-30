@@ -1,0 +1,102 @@
+\chapter{Metodologia}
+\label{cap:metodologia}
+
+Este capítulo descreve o desenho metodológico adotado para avaliar a modernização do módulo
+de roteamento geográfico GPSR no simulador ns-3. São apresentados: a caracterização da
+pesquisa; o ambiente de desenvolvimento utilizado; os critérios de seleção da implementação
+do GPSR a ser modernizada; o cenário de VANET construído para os experimentos; os
+protocolos comparados; as métricas de desempenho coletadas; e o planejamento estatístico dos
+experimentos. O processo técnico de diagnóstico e modernização do código-fonte, por sua vez,
+é detalhado no Capítulo~\ref{cap:implementacao}.
+
+\section{Caracterização da Pesquisa}
+\label{sec:caracterizacao}
+
+Quanto à natureza, esta pesquisa é classificada como aplicada, pois tem como produto um
+artefato de software — o módulo GPSR modernizado — destinado a uso prático pela comunidade
+de usuários do ns-3. Quanto à abordagem, é predominantemente quantitativa, uma vez que a
+avaliação do artefato produzido se dá por meio da coleta e da análise estatística de métricas
+de desempenho de rede. Quanto aos procedimentos, combina uma etapa de pesquisa bibliográfica
+— a Revisão Sistemática da Literatura apresentada no Capítulo~\ref{cap:rsl} — com uma etapa
+de pesquisa experimental, na qual o artefato desenvolvido é avaliado em ambiente controlado
+de simulação, seguindo o delineamento descrito nas seções seguintes.
+
+\section{Ambiente de Desenvolvimento}
+\label{sec:ambiente}
+
+Os experimentos são realizados em uma versão atual e estável do ns-3, executada em ambiente
+Linux, com as ferramentas de compilação necessárias à construção do simulador e de seus
+módulos (compilador C++, CMake e as bibliotecas de dependência do ns-3). A coleta de
+métricas é realizada por meio do módulo FlowMonitor \cite{carneiro2009flowmonitor}, nativo do
+simulador, e a análise dos dados exportados é conduzida com ferramentas de processamento de
+dados e geração de gráficos externas ao ns-3. O ambiente de desenvolvimento completo,
+incluindo versões específicas de software e passos de instalação, é documentado em separado,
+de modo a garantir a reprodutibilidade do experimento por terceiros.
+
+\section{Seleção da Implementação do GPSR}
+\label{sec:selecao-gpsr}
+
+Como discutido na Seção~\ref{sec:roteamento-geografico}, não há, no núcleo oficial do ns-3,
+um módulo de roteamento geográfico. A implementação de referência utilizada como ponto de
+partida para a modernização é a documentada por \citeonline{katsaros_positionbased_ns3}, que
+deu origem a diversas cópias não-oficiais mantidas pela comunidade em repositórios de código
+independentes. Dentre essas cópias, a seleção da versão a ser modernizada considera os
+seguintes critérios: (i) proximidade da versão do ns-3 para a qual o código foi originalmente
+escrito, de modo a minimizar o número de incompatibilidades a corrigir; (ii) completude da
+implementação, isto é, presença de todos os arquivos que compõem o módulo (modelo, auxiliares
+de configuração e exemplos); (iii) disponibilidade de documentação mínima sobre o
+funcionamento do código; e (iv) compatibilidade de licença com a licença do próprio ns-3
+(GPLv2), de modo a viabilizar a disponibilização do módulo modernizado à comunidade.
+
+\section{Cenário de VANET}
+\label{sec:cenario-vanet}
+
+O cenário experimental representa um trecho de rodovia percorrido por um conjunto de
+veículos, utilizando um modelo de mobilidade nativo do ns-3, na linha do proposto por
+\citeonline{arbabi2010highway}, sem dependência de simuladores de mobilidade externos,
+conforme justificado na Seção~\ref{sec:mobilidade}. São definidos como parâmetros
+experimentais o número de veículos, a densidade da rede (veículos por unidade de área ou de
+extensão de via) e a duração de cada execução de simulação, os quais são variados de forma
+controlada para permitir observar o comportamento dos protocolos avaliados sob diferentes
+condições de carga e mobilidade.
+
+\section{Protocolos Comparados}
+\label{sec:protocolos-comparados}
+
+São comparados três protocolos de roteamento, executados sobre o mesmo cenário e os mesmos
+parâmetros experimentais: o módulo GPSR modernizado, objeto deste trabalho; e os protocolos
+topológicos nativos do ns-3, AODV e OLSR, cuja simulação no simulador é documentada por
+\citeonline{pimenta2013simulacao}. A comparação entre um protocolo geográfico e dois
+protocolos topológicos, sob condições experimentais idênticas, permite isolar o efeito da
+estratégia de roteamento sobre as métricas de desempenho coletadas.
+
+\section{Métricas de Desempenho}
+\label{sec:metricas}
+
+As métricas de desempenho são coletadas automaticamente por meio do módulo FlowMonitor
+\cite{carneiro2009flowmonitor} ao final de cada execução de simulação, compreendendo: a taxa
+de transferência (\textit{throughput}), medida em kbps; o atraso médio fim a fim
+(\textit{delay}), medido em milissegundos; a taxa de entrega de pacotes (\textit{Packet
+Delivery Ratio}, PDR), medida em percentual de pacotes entregues em relação aos enviados; e o
+\textit{overhead} de roteamento, medido pela razão entre pacotes de controle e pacotes de
+dados efetivamente entregues. Essas métricas são escolhidas por serem as mais frequentemente
+reportadas na literatura de avaliação de protocolos de roteamento em VANETs, conforme
+identificado na Revisão Sistemática da Literatura (Capítulo~\ref{cap:rsl}).
+
+\section{Planejamento dos Experimentos}
+\label{sec:planejamento}
+
+Para cada combinação de cenário e protocolo, são realizadas 30 execuções independentes da
+simulação, variando-se a semente do gerador de números aleatórios do ns-3
+(\texttt{RngRun}) a cada execução, de modo a capturar a variabilidade inerente aos aspectos
+estocásticos do cenário (posicionamento inicial dos veículos e variações no padrão de
+tráfego de rede). A mesma sequência de 30 sementes é aplicada aos três protocolos
+comparados (Seção~\ref{sec:protocolos-comparados}), garantindo que as diferenças observadas
+nas métricas de desempenho sejam atribuíveis à estratégia de roteamento, e não a variações
+aleatórias entre execuções.
+
+Os resultados de cada métrica são reportados como média das 30 execuções, acompanhada do
+intervalo de confiança de 95\%. A significância estatística das diferenças observadas entre
+o GPSR modernizado e os protocolos nativos é avaliada por meio de testes de hipótese
+apropriados à distribuição dos dados coletados, cuja aplicação e resultados são apresentados
+no Capítulo~\ref{cap:resultados}.

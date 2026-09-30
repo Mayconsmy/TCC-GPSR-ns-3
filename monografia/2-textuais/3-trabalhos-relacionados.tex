@@ -1,0 +1,172 @@
+\chapter{Revisão de Literatura}
+\label{cap:rsl}
+
+Este capítulo apresenta a Revisão Sistemática da Literatura (RSL) conduzida para
+fundamentar a modernização do módulo GPSR no ns-3. Diferentemente de uma revisão
+narrativa, a RSL segue um protocolo definido previamente à busca, o que torna o processo de
+seleção e análise dos estudos transparente e reproduzível \cite{kitchenham2007guidelines}.
+Como referência de escopo, toma-se o estudo de \citeonline{campanile2020computer}, que
+mapeou o uso do ns-3 em publicações de 2009 a 2019; a presente revisão amplia esse
+levantamento, concentrando-se na extensibilidade do simulador no domínio das redes
+veiculares.
+
+A revisão é guiada pelas seguintes questões de pesquisa (\textit{Research Questions}, RQ):
+
+\begin{itemize}
+  \item \textbf{RQ1:} Que extensões e módulos voltados a redes veiculares já foram propostos
+  ou implementados no ns-3?
+  \item \textbf{RQ2:} Que protocolos de roteamento para VANETs foram implementados ou
+  avaliados no ns-3, e em que medida o roteamento geográfico (GPSR e variantes) está
+  representado?
+  \item \textbf{RQ3:} Que lacunas funcionais, limitações de compatibilidade ou dificuldades
+  de manutenção de módulos são reportadas pela literatura?
+  \item \textbf{RQ4:} Que metodologias de validação e métricas de desempenho são empregadas
+  para avaliar módulos e protocolos no ns-3?
+\end{itemize}
+
+\section{Protocolo da Revisão}
+\label{sec:protocolo-rsl}
+
+O protocolo compreende as bases pesquisadas, as \textit{strings} de busca, o período
+considerado e o registro da execução, descritos a seguir.
+
+\subsection{Bases Pesquisadas}
+\label{sec:bases}
+
+A busca é realizada nas bases IEEE Xplore, ACM Digital Library, Scopus e Web of Science,
+por concentrarem a produção científica da área de redes de computadores. De forma
+complementar, utiliza-se o Google Scholar para identificar trabalhos não indexados nas
+bases anteriores e a biblioteca digital da Sociedade Brasileira de Computação (SBC
+OpenLib), a fim de incluir a produção nacional, como os anais do Simpósio Brasileiro de Redes
+de Computadores e Sistemas Distribuídos (SBRC).
+
+\subsection{\textit{Strings} de Busca}
+\label{sec:strings}
+
+A \textit{string} base (S1) combina três grupos de termos: o simulador, o domínio de aplicação
+e o tipo de contribuição. Uma segunda \textit{string} (S2) é dirigida ao roteamento geográfico,
+e uma terceira (S3) é utilizada nas bases em português:
+
+\begin{quote}
+\small
+\textbf{S1:} \texttt{("ns-3" OR "ns3" OR "network simulator 3") AND ("VANET" OR "vehicular
+ad hoc" OR "vehicular network*") AND ("routing" OR "module" OR "extension" OR
+"implementation")}
+
+\vspace{0.2cm}
+\textbf{S2:} \texttt{("ns-3" OR "ns3") AND ("GPSR" OR "geographic routing" OR
+"position-based routing")}
+
+\vspace{0.2cm}
+\textbf{S3:} \texttt{("ns-3" OR "ns3") AND ("VANET" OR "redes veiculares") AND
+("roteamento" OR "módulo" OR "extensão")}
+\end{quote}
+
+As \textit{strings} são adaptadas à sintaxe de cada base (campos de busca, operadores e
+truncamento) e aplicadas aos campos de título, resumo e palavras-chave. Como verificação de
+sensibilidade, confere-se se a busca recupera trabalhos já conhecidos previamente pelo autor
+(conjunto-semente), ajustando-se os termos caso algum deles não seja retornado.
+
+\subsection{Período Considerado}
+\label{sec:periodo}
+
+São considerados os estudos publicados entre 2009 e 2026, de modo a cobrir a janela
+analisada por \citeonline{campanile2020computer} e o intervalo posterior a ela.
+
+\subsection{Data da Pesquisa}
+\label{sec:data-pesquisa}
+
+As buscas são executadas em um único período contínuo, para reduzir variações nos
+resultados retornados pelas bases ao longo do tempo. A data de execução e o número de
+resultados retornados em cada base são registrados na Tabela~\ref{tab:busca}.
+
+\begin{table}[ht]
+\centering
+\caption{Registro da execução da busca por base.}
+\label{tab:busca}
+\small
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Base} & \textbf{Data da busca} & \textbf{Resultados retornados} \\ \hline
+IEEE Xplore & -- & -- \\ \hline
+ACM Digital Library & -- & -- \\ \hline
+Scopus & -- & -- \\ \hline
+Web of Science & -- & -- \\ \hline
+Google Scholar & -- & -- \\ \hline
+SBC OpenLib & -- & -- \\ \hline
+\end{tabular}
+
+\par\vspace{0.1cm}{\small Fonte: elaborado pelo autor.}
+\end{table}
+
+\section{Critérios de Inclusão e Exclusão}
+\label{sec:criterios}
+
+Consideram-se apenas estudos completos, publicados em periódicos ou anais de eventos, em
+português ou inglês, dentro do período definido na Seção~\ref{sec:periodo}.
+
+\subsection{Critérios de Inclusão}
+\label{sec:inclusao}
+
+Um estudo é incluído quando atende ao critério CI1 e a pelo menos um dos critérios CI2 a CI5:
+
+\begin{itemize}
+  \item \textbf{CI1:} envolve o ns-3 como ferramenta de simulação;
+  \item \textbf{CI2:} trata de redes veiculares (VANETs);
+  \item \textbf{CI3:} aborda o protocolo GPSR ou o roteamento geográfico;
+  \item \textbf{CI4:} discute a extensibilidade do ns-3;
+  \item \textbf{CI5:} descreve a implementação de módulos no ns-3.
+\end{itemize}
+
+\subsection{Critérios de Exclusão}
+\label{sec:exclusao}
+
+Um estudo é excluído quando atende a qualquer um dos critérios abaixo:
+
+\begin{itemize}
+  \item \textbf{CE1:} estudo duplicado;
+  \item \textbf{CE2:} texto sem acesso integral;
+  \item \textbf{CE3:} sem relação com o tema da pesquisa;
+  \item \textbf{CE4:} cita o ns-3 sem utilizá-lo como ferramenta.
+\end{itemize}
+
+\section{Seleção dos Estudos e Extração de Dados}
+\label{sec:selecao}
+
+A seleção é conduzida em quatro etapas sucessivas: (i) execução das \textit{strings} em cada
+base e remoção de duplicatas; (ii) triagem por título e resumo, aplicando os critérios da
+Seção~\ref{sec:criterios}; (iii) leitura completa dos estudos remanescentes, com nova
+aplicação dos critérios; e (iv) extração dos dados dos estudos incluídos. O número de
+estudos em cada etapa é registrado na Tabela~\ref{tab:fluxo}.
+
+\begin{table}[ht]
+\centering
+\caption{Fluxo de seleção dos estudos.}
+\label{tab:fluxo}
+\small
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Etapa} & \textbf{Estudos} \\ \hline
+Registros identificados nas bases & -- \\ \hline
+Após remoção de duplicatas & -- \\ \hline
+Após triagem por título e resumo & -- \\ \hline
+Incluídos após leitura completa & -- \\ \hline
+\end{tabular}
+
+\par\vspace{0.1cm}{\small Fonte: elaborado pelo autor.}
+\end{table}
+
+Para cada estudo incluído, são extraídos: autores e ano; versão do ns-3 utilizada; protocolo ou
+módulo estudado; se houve criação ou modificação de módulo; modelo de mobilidade
+empregado; métricas de desempenho avaliadas; e limitações ou problemas de compatibilidade
+relatados. Esses campos alimentam a resposta às questões RQ1 a RQ4.
+
+\section{Análise dos Estudos Selecionados}
+\label{sec:analise-rsl}
+
+% A ser redigida após a execução do protocolo: síntese por questão de pesquisa (RQ1 a RQ4).
+
+\section{Lacunas Identificadas}
+\label{sec:lacunas}
+
+% A ser redigida após a análise dos estudos selecionados.
