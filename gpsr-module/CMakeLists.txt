@@ -4,11 +4,13 @@ build_lib(
     model/gpsr.cc
     model/gpsr-packet.cc
     model/gpsr-ptable.cc
+    model/gpsr-rqueue.cc
     helper/gpsr-helper.cc
   HEADER_FILES
     model/gpsr.h
     model/gpsr-packet.h
     model/gpsr-ptable.h
+    model/gpsr-rqueue.h
     helper/gpsr-helper.h
   LIBRARIES_TO_LINK
     ${libcore}
