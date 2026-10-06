@@ -118,4 +118,4 @@ licença do ns-3 — ver [`LICENSE`](LICENSE).
 
 ## Como citar
 
-Ver [`CITATION.cff`](CITATION.cff).
+aer [`CITATION.cff`](CITATION.cff).

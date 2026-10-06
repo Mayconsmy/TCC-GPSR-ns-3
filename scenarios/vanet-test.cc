@@ -17,11 +17,11 @@ int main (int argc, char *argv[])
   LogComponentEnable ("UdpEchoClientApplication", LOG_LEVEL_INFO);
   LogComponentEnable ("UdpEchoServerApplication", LOG_LEVEL_INFO);
   LogComponentEnable ("GpsrRoutingProtocol", LOG_LEVEL_INFO);
-  
+
   std::string routingProt = "GPSR";
   CommandLine cmd (__FILE__);
   cmd.AddValue ("routing", "Protocolo de Roteamento (GPSR, AODV, OLSR)", routingProt);
-  cmd.Parse (argc, argv); 
+  cmd.Parse (argc, argv);
 
   uint32_t numNodes = 300;
   double simulationTime = 100.0;
@@ -33,7 +33,7 @@ int main (int argc, char *argv[])
   YansWifiPhyHelper wifiPhy;
   wifiPhy.Set ("TxPowerStart", DoubleValue (33.0));
   wifiPhy.Set ("TxPowerEnd", DoubleValue (33.0));
-  
+
   YansWifiChannelHelper wifiChannel = YansWifiChannelHelper::Default ();
   wifiPhy.SetChannel (wifiChannel.Create ());
 
@@ -41,7 +41,7 @@ int main (int argc, char *argv[])
   wifiMac.SetType ("ns3::AdhocWifiMac");
 
   WifiHelper wifi;
-  wifi.SetStandard (WIFI_STANDARD_80211p); 
+  wifi.SetStandard (WIFI_STANDARD_80211p);
   NetDeviceContainer devices = wifi.Install (wifiPhy, wifiMac, vehicles);
 
   // 2. Mobilidade do SUMO
@@ -72,7 +72,7 @@ int main (int argc, char *argv[])
   // 4. Trafego UDP
   // CORREÇÃO: Escolhemos carros que acabaram de "nascer" no SUMO perto do segundo 20.
   // Isso garante que eles estão vivos e no meio do trânsito na hora do teste.
-  uint32_t serverNode = 29; 
+  uint32_t serverNode = 29;
   uint32_t clientNode = 25;
 
   UdpEchoServerHelper echoServer (9);
@@ -87,7 +87,7 @@ int main (int argc, char *argv[])
 
   ApplicationContainer clientApps = echoClient.Install (vehicles.Get (clientNode));
   // O cliente dispara quando o trânsito começa a ficar denso
-  clientApps.Start (Seconds (30.0)); 
+  clientApps.Start (Seconds (30.0));
   clientApps.Stop (Seconds (simulationTime));
 
   // 5. Metricas
@@ -102,6 +102,6 @@ int main (int argc, char *argv[])
 
   Simulator::Destroy ();
   NS_LOG_UNCOND ("Simulacao concluida! Metricas salvas em 'gpsr-sumo-results.xml'.");
-  
+
   return 0;
 }

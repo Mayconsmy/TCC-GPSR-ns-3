@@ -1,5 +1,4 @@
-/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
-
+ /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 #include "ns3/gpsr-module.h"
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
@@ -27,7 +26,7 @@ public:
   /// Report results
   void Report (std::ostream & os);
 
-private:
+
   ///\name parameters
   //\{
   /// Number of nodes
