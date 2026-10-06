@@ -59,7 +59,7 @@ int main (int argc, char **argv)
 {
   GpsrExample test;
   if (! test.Configure(argc, argv))
-    NS_FATAL_ERROR ("Configuration failed. Aborted.");
+    NS_FATAL_ERROR ("Configuration failed. Aborted");
 
 
   test.Run ();
